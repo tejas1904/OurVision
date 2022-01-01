@@ -135,6 +135,7 @@ def get_words(image_path,detector,recognizer,nms_thresh=0.4,confidence_thresh=0.
 			if True:
 				cropped = fourPointsTransform(frame, vertices)
 				cropped = cv.cvtColor(cropped, cv.COLOR_BGR2GRAY)
+<<<<<<< HEAD
 				
 				#bottom left
 				x1=int(vertices[0][0])
@@ -148,15 +149,23 @@ def get_words(image_path,detector,recognizer,nms_thresh=0.4,confidence_thresh=0.
 				#bottom right
 				x4=int(vertices[3][0])
 				y4=int(vertices[3][1])
+=======
+>>>>>>> 8063c697b6f2a25ae07e2ddf857c8241e6eeca60
 
 				# Create a 4D blob from cropped image
 				blob = cv.dnn.blobFromImage(cropped, size=(100, 32), mean=127.5, scalefactor=1 / 127.5)
 				recognizer.setInput(blob)
+<<<<<<< HEAD
 				#run model
 				result = recognizer.forward()
 				wordRecognized = decodeText(result)
 				
 				print(f"recognized word is {wordRecognized} vertices={[x1,y1],[x2,y2]}, confidence={int(confidences[i]*100)}")
+=======
+				result = recognizer.forward()
+				wordRecognized = decodeText(result)
+				print(f"recognized word is {wordRecognized}")
+>>>>>>> 8063c697b6f2a25ae07e2ddf857c8241e6eeca60
 
 
 def main():
@@ -184,4 +193,7 @@ def main():
 main()
     
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8063c697b6f2a25ae07e2ddf857c8241e6eeca60
