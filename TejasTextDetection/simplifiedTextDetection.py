@@ -4,6 +4,8 @@ import math
 import time
 import os,sys
 
+
+
 def fourPointsTransform(frame, vertices):
 	vertices = np.asarray(vertices)
 	outputSize = (100, 32)
@@ -100,6 +102,8 @@ def get_words(image_path,detector,recognizer,nms_thresh=0.4,confidence_thresh=0.
 	inpWidth = resize_width
 	inpHeight = resize_height
 	
+	bounding_boxes={}
+	
 	
 	outNames = []
 	outNames.append("feature_fusion/Conv_7/Sigmoid")
@@ -135,7 +139,6 @@ def get_words(image_path,detector,recognizer,nms_thresh=0.4,confidence_thresh=0.
 			if True:
 				cropped = fourPointsTransform(frame, vertices)
 				cropped = cv.cvtColor(cropped, cv.COLOR_BGR2GRAY)
-<<<<<<< HEAD
 				
 				#bottom left
 				x1=int(vertices[0][0])
@@ -149,24 +152,51 @@ def get_words(image_path,detector,recognizer,nms_thresh=0.4,confidence_thresh=0.
 				#bottom right
 				x4=int(vertices[3][0])
 				y4=int(vertices[3][1])
-=======
->>>>>>> 8063c697b6f2a25ae07e2ddf857c8241e6eeca60
+				
+				
 
 				# Create a 4D blob from cropped image
 				blob = cv.dnn.blobFromImage(cropped, size=(100, 32), mean=127.5, scalefactor=1 / 127.5)
 				recognizer.setInput(blob)
-<<<<<<< HEAD
 				#run model
 				result = recognizer.forward()
 				wordRecognized = decodeText(result)
 				
-				print(f"recognized word is {wordRecognized} vertices={[x1,y1],[x2,y2]}, confidence={int(confidences[i]*100)}")
-=======
-				result = recognizer.forward()
-				wordRecognized = decodeText(result)
-				print(f"recognized word is {wordRecognized}")
->>>>>>> 8063c697b6f2a25ae07e2ddf857c8241e6eeca60
+				bounding_boxes[(x1,y1)]=wordRecognized
+				
+				
+				#print(f"recognized word is {wordRecognized} vertices={[x1,y1],[x2,y2]}, confidence={int(confidences[i]*100)}")
+	return sort_points(list(bounding_boxes.keys()),bounding_boxes)
 
+def sort_points(keypoints,dicta):
+	points = []
+	keypoints_to_search = keypoints[:]
+	while len(keypoints_to_search) > 0:
+		a = sorted(keypoints_to_search, key=lambda p: (p[0]) + (p[1]))[0]  # find upper left point
+		b = sorted(keypoints_to_search, key=lambda p: (p[0]) - (p[1]))[-1]  # find upper right point
+
+		
+
+		# convert opencv keypoint to numpy 3d point
+		a = np.array([a[0], a[1], 0])
+		b = np.array([b[0], b[1], 0])
+
+		row_points = []
+		remaining_points = []
+		for k in keypoints_to_search:
+			p = np.array([k[0], k[1], 0])
+			d = len(k)  # diameter of the keypoint (might be a theshold)
+			dist = np.linalg.norm(np.cross(np.subtract(p, a), np.subtract(b, a))) / np.linalg.norm(b)   # distance between keypoint and line a->b
+			if d/2 > dist:
+				row_points.append(k)
+			else:
+				remaining_points.append(k)
+
+		points.extend(sorted(row_points, key=lambda h: h[0]))
+		keypoints_to_search = remaining_points
+	
+	return points,dicta
+		
 
 def main():
 	
@@ -188,12 +218,12 @@ def main():
         
 		start = time.time()
 		#os.popen('libcamera-jpeg -o camera_image.jpeg -t 5000 ')
-		get_words(image_path,detector_model,recognizer_model,nms_thresh=0.4,confidence_thresh=0.8,resize_width=320,resize_height=320)
+		ordr_points,dicta=get_words(image_path,detector_model,recognizer_model,nms_thresh=0.4,confidence_thresh=0.5,resize_width=320,resize_height=320)
+		#sort_points(list(bounding_boxes.keys()))
+		for i in ordr_points:
+			print(dicta[i])
+			
 		print(time.time() - start)
 main()
     
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 8063c697b6f2a25ae07e2ddf857c8241e6eeca60
