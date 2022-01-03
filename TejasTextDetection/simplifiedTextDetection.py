@@ -200,9 +200,9 @@ def sort_points(keypoints,dicta):
 
 def main():
 	
-	image_path="camera_image.jpeg";
-	text_detection_model_path="frozen_east_text_detection.pb";
-	text_recognition_model_path="crnn.onnx";
+	image_path="/home/pi/Desktop/GitHub/OurVision/TejasTextDetection/camera_image.jpeg";
+	text_detection_model_path="/home/pi/Desktop/GitHub/OurVision/TejasTextDetection/frozen_east_text_detection.pb";
+	text_recognition_model_path="/home/pi/Desktop/GitHub/OurVision/TejasTextDetection/crnn.onnx";
 	
 	print("loading models please wait......")
 	
@@ -213,7 +213,8 @@ def main():
 	
 	
 	
-	i=int(input("enter 1 to continue "));
+	#i=int(input("enter 1 to continue "));
+	i=1
 	if (i==1):
         
 		start = time.time()
