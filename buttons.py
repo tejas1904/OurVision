@@ -16,7 +16,7 @@ obj=SceneOCR(detector_model,recognizer_model,image_path)
 print("models Loaded")
 	
 		
-def button_callback(channel):
+def perform_scene_ocr():
 	print("hello")
 	
 	
@@ -41,10 +41,15 @@ GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
 GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) # Set pin 10 to be an input pin and set initial value to be pulled low (off)
 
-GPIO.add_event_detect(10,GPIO.FALLING,callback=button_callback,bouncetime=1000) # Setup event on pin 10 rising edge
+GPIO.add_event_detect(10,GPIO.FALLING,bouncetime=1000) # Setup event on pin 10 rising edge
+
+while True:
+	if GPIO.event_detected(10):
+		perform_scene_ocr()
 
 message = input("Press enter to quit\n\n") # Run until someone presses enter
 
 GPIO.cleanup() # Clean up
+
 
 
