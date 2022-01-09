@@ -118,7 +118,7 @@ class SceneOCR:
 		outNames.append("feature_fusion/concat_3")
 
 		frame=cv.imread(image_path)
-		cv.imshow('image',frame)
+		#cv.imshow('image',frame)
 		
 		height_ = frame.shape[0]
 		width_ = frame.shape[1]
@@ -230,4 +230,5 @@ class SceneOCR:
 #recognizer_model = cv.dnn.readNet(text_recognition_model_path)
 #image_path="/home/pi/Desktop/GitHub/OurVision/TejasTextDetection/camera_image.jpeg"
 #obj=SceneOCR(detector_model,recognizer_model,image_path)
-#obj.ocr()
+#op=obj.ocr()
+#print(op)
