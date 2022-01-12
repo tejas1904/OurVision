@@ -42,9 +42,11 @@ class DocScanner:
         r = orig
         if outline is not None:
             r = perspective.four_point_transform(orig, outline * ratio)
-                
+        else:
+            print("yes")
         return r
     
 if __name__ == "__main__":
-    scanned_image = DocScanner().scan(img=cv2.imread('cell_pic.jpg'))
-    cv2.imwrite('scanned_image.png', scanned_image)
+    image = cv2.imread('cell_pic.jpg')
+    scanned_image = DocScanner().scan(img=image)
+    cv2.imwrite('scanned_image.jpg', scanned_image)
