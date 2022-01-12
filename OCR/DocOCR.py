@@ -1,6 +1,7 @@
 import cv2
 import pytesseract
 from PIL import Image
+from docscan.doc import scan
 
 class DocOCR:
     def __init__(self, imagePath:str=None, image=None):
