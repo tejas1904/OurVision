@@ -1,52 +1,52 @@
-import os
-
 import cv2
-import imutils
-import numpy as np
-from imutils import perspective
-from rembg.bg import remove as rembg
+import numpy as np   
 
-APPROX_POLY_DP_ACCURACY_RATIO = 0.02
-IMG_RESIZE_H = 500.0
 
 class DocScanner:
-    def scan(self, img=None, imagePath=None):
+    @classmethod
+    def scan(self, img=None, path=None):
         if img is not None:
             pass
-        elif imagePath is not None:
-            img = cv2.imread(imagePath)
+        elif path is not None:
+            img = cv2.imread(path)
         else:
-            return None
-        
-        orig = img.copy()
+            print("no image detected...")
+        height, width, channels = img.shape # Find Height And Width Of Image
 
-        ratio = img.shape[0] / IMG_RESIZE_H
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # RGB To Gray Scale
 
-        img = imutils.resize(img, height=int(IMG_RESIZE_H))
-        _, img = cv2.threshold(img[:,:,2], 0, 255, cv2.THRESH_BINARY)
-        img = cv2.medianBlur(img, 15)
+        kernel = np.ones((5, 5), np.uint8) # Reduce Noise Of Image
+        erosion = cv2.erode(gray, kernel, iterations=1)
+        opening = cv2.morphologyEx(erosion, cv2.MORPH_OPEN, kernel)
+        closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel)
 
-        cnts = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        cnts = imutils.grab_contours(cnts)
-        cnts = sorted(cnts, key=cv2.contourArea, reverse=True)
+        edges = cv2.Canny(closing, 20, 240) # Find Edges
 
-        outline = None
+        # Get Threshold Of Canny
+        thresh = cv2.adaptiveThreshold(edges, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)  
 
-        for c in cnts:
-            perimeter = cv2.arcLength(c, True)
-            polygon = cv2.approxPolyDP(c, APPROX_POLY_DP_ACCURACY_RATIO * perimeter, True)
+        # Find Contours In Image
+        contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)  
 
-            if len(polygon) == 4:
-                outline = polygon.reshape(4, 2)
+        # Find Biggest Contour
+        areas = [cv2.contourArea(c) for c in contours]
+        max_index = np.argmax(areas)
+        print(max_index)
 
-        r = orig
-        if outline is not None:
-            r = perspective.four_point_transform(orig, outline * ratio)
-        else:
-            print("yes")
-        return r
-    
+        # Find approxPoly Of Biggest Contour
+        epsilon = 0.1 * cv2.arcLength(contours[max_index], True)
+        approx = cv2.approxPolyDP(contours[max_index], epsilon, True)
+
+        # Crop The Image To approxPoly
+        pts1 = np.float32(approx)
+        pts = np.float32([[0, 0], [width, 0], [width, height], [0, height]])
+        matrix = cv2.getPerspectiveTransform(pts1, pts)
+        result = cv2.warpPerspective(img, matrix, (width, height))
+
+        flip = cv2.flip(result, 1) # Flip Image
+        return flip
+
 if __name__ == "__main__":
-    image = cv2.imread('cell_pic.jpg')
-    scanned_image = DocScanner().scan(img=image)
-    cv2.imwrite('scanned_image.jpg', scanned_image)
+    img = cv2.imread('cell_pic.jpg')
+    scannedImage = DocScanner.scan(img=img)
+    cv2.imwrite("scanned_image.jpg", scannedImage)
