@@ -1,6 +1,6 @@
 import cv2
-import numpy as np   
-
+import numpy as np 
+import os,sys,subprocess,time
 
 class DocScanner:
     @classmethod
@@ -31,22 +31,31 @@ class DocScanner:
         # Find Biggest Contour
         areas = [cv2.contourArea(c) for c in contours]
         max_index = np.argmax(areas)
-        print(max_index)
 
         # Find approxPoly Of Biggest Contour
         epsilon = 0.1 * cv2.arcLength(contours[max_index], True)
         approx = cv2.approxPolyDP(contours[max_index], epsilon, True)
 
         # Crop The Image To approxPoly
-        pts1 = np.float32(approx)
-        pts = np.float32([[0, 0], [width, 0], [width, height], [0, height]])
-        matrix = cv2.getPerspectiveTransform(pts1, pts)
-        result = cv2.warpPerspective(img, matrix, (width, height))
+        try:
+                pts1 = np.float32(approx)
+                pts = np.float32([[0, 0], [width, 0], [width, height], [0, height]])
+                matrix = cv2.getPerspectiveTransform(pts1, pts)
+                result = cv2.warpPerspective(img, matrix, (width, height))
 
-        flip = cv2.flip(result, 1) # Flip Image
-        return flip
-
+                flip = cv2.flip(result, 1) # Flip Image
+                return 1,flip
+        except:
+                print("couldnt approximate poly");
+                return 0,img
 if __name__ == "__main__":
-    img = cv2.imread('cell_pic.jpg')
-    scannedImage = DocScanner.scan(img=img)
-    cv2.imwrite("scanned_image.jpg", scannedImage)
+    #cmd = "libcamera-jpeg -o camera_image_1.jpeg -t 1500 --width 960 --height 960"
+    #returned_value = subprocess.call(cmd,shell=True)
+    #print(f"return value{returned_value}")
+    #if (returned_value==0):
+        img = cv2.imread('receipt.jpg')
+        _,scannedImage = DocScanner.scan(img=img)
+        resized_down = cv2.resize(scannedImage, (320,320), interpolation= cv2.INTER_LINEAR)
+        cv2.imshow("op",resized_down)
+        cv2.waitKey(0) # waits until a key is pressed
+        cv2.destroyAllWindows()
