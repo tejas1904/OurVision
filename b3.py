@@ -186,9 +186,6 @@ class ButtonHandler:
 		AudioPlayer(self.mp3dict[self.state]).play(block=True)
 		
 	def up(self):
-		
-		
-		
 		self.state = (self.state + 1) % State.Count
 		print(self.state)
 		AudioPlayer(self.mp3dict[self.state]).play(block=True)
