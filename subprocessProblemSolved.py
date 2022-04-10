@@ -5,19 +5,6 @@ import pickle
 import os
 import signal
 
-class PersistentList(list):
-    def __init__(self, key, db):
-        self.key = key
-        self.extend(db.get(key, []))
-    def _save(self):
-        # db.set(self.key, self)
-        print('saving {x}'.format(x = self))
-    def __enter__(self):
-        return self
-    def __exit__(self,ext_type,exc_value,traceback):
-        self._save()
-
-
 class ShellProcess:
     def __init__(self, command, shell=False):
         self.p = None
@@ -38,9 +25,6 @@ class SubprocessObserver:
     # Create a subprocess
     def create(self, command):
         p = Popen(command, shell=True, preexec_fn=os.setpgrp)
-        
-        # with open("test", "rb") as fp:   # Unpickling
-        #     self.processes = pickle.load(fp)
         self.processes.append(p.pid)
         print(self.processes)
         pickle.dump(self.processes,open('test.p','wb'))
@@ -52,9 +36,7 @@ class SubprocessObserver:
         for pid in self.processes:
             os.killpg(os.getpgid(pid), signal.SIGTERM)
         self.processes = []
-        
-        # with open("test", "wb") as fp:   #Pickling
-        #     pickle.dump(self.processes, fp)
+        pickle.dump(self.processes,open('test.p','wb'))
 
 class State:
     Count = 3
@@ -85,11 +67,14 @@ class ButtonHandler:
     def performDocOcr(self):
         # how to create a subprocess
         self.create("python3 dococr.py")
+        self.create("python3 dococr.py")
     
     def performSceneOcr(self):
         self.create("python3 sceneocr.py")
+        self.create("python3 sceneocr.py")
     
     def performSceneDesc(self):
+        self.create("python3 scenedesc.py")
         self.create("python3 scenedesc.py")
     
     def kill(self):
@@ -101,7 +86,7 @@ class ButtonHandler:
     def select(self):
         if self.currProc.is_alive():
             return
-        # self.kill()
+        
         if self.state == State.DocOCR:
             self.currProc = Process(target=self.performDocOcr, daemon=True)
         elif self.state == State.SceneOCR:
