@@ -19,12 +19,12 @@ import time
 
 
 
-image_path="~/Desktop/OurVision/InputImages/camera_image_2.jpeg"
-output_image_path="~/Desktop/OurVision/OutputImages/output_camera_image_2.jpeg"
+image_path="InputImages/camera_image_2.jpeg"
+output_image_path="OutputImages/output_camera_image_2.jpeg"
 
 #scene ocr object
-text_detection_model_path="~/Desktop/OurVision/Models/frozen_east_text_detection.pb";
-text_recognition_model_path="~/Desktop/OurVision/Models/crnn.onnx";
+text_detection_model_path="Models/frozen_east_text_detection.pb";
+text_recognition_model_path="Models/crnn.onnx";
 detector_model = cv.dnn.readNet(text_detection_model_path)
 recognizer_model = cv.dnn.readNet(text_recognition_model_path)
 
@@ -32,8 +32,8 @@ recognizer_model = cv.dnn.readNet(text_recognition_model_path)
 scene_ocr=SceneOCR(detector_model,recognizer_model,image_path)
 
 #Describe Scene object
-Depth_model_path="~/Desktop/OurVision/SeneDescribe/Models/lite-model_midas_v2_1_small_1_lite_1.tflite"
-Object_detection_model_path="~/Desktop/OurVision/SeneDescribe/Models/efficientdet_lite0.tflite"
+Depth_model_path="SeneDescribe/Models/lite-model_midas_v2_1_small_1_lite_1.tflite"
+Object_detection_model_path="SeneDescribe/Models/efficientdet_lite0.tflite"
 
 scene_desc=SceneDescribe(Depth_model_path , Object_detection_model_path)
 
