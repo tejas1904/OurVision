@@ -1,6 +1,5 @@
 import cv2
 import numpy as np 
-import os,sys,subprocess,time
 
 class DocScanner:
     @classmethod
@@ -11,7 +10,8 @@ class DocScanner:
             img = cv2.imread(path)
         else:
             print("no image detected...")
-        height, width, channels = img.shape # Find Height And Width Of Image
+
+        height, width, _ = img.shape # Find Height And Width Of Image
 
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # RGB To Gray Scale
 
@@ -26,7 +26,7 @@ class DocScanner:
         thresh = cv2.adaptiveThreshold(edges, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)  
 
         # Find Contours In Image
-        contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)  
+        contours, _ = cv2.findContours(thresh,cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)  
 
         # Find Biggest Contour
         areas = [cv2.contourArea(c) for c in contours]
@@ -44,18 +44,15 @@ class DocScanner:
                 result = cv2.warpPerspective(img, matrix, (width, height))
 
                 flip = cv2.flip(result, 1) # Flip Image
-                return 1,flip
+                return 1, flip
         except:
                 print("couldnt approximate poly");
-                return 0,img
-if __name__ == "__main__":
-    #cmd = "libcamera-jpeg -o camera_image_1.jpeg -t 1500 --width 960 --height 960"
-    #returned_value = subprocess.call(cmd,shell=True)
-    #print(f"return value{returned_value}")
-    #if (returned_value==0):
-        img = cv2.imread('receipt.jpg')
-        _,scannedImage = DocScanner.scan(img=img)
-        resized_down = cv2.resize(scannedImage, (320,320), interpolation= cv2.INTER_LINEAR)
-        cv2.imshow("op",resized_down)
-        cv2.waitKey(0) # waits until a key is pressed
-        cv2.destroyAllWindows()
+                return 0, img
+
+if __name__ == "__main__":    
+    img = cv2.imread('receipt.jpg')
+    _,scannedImage = DocScanner.scan(img=img)
+    resized_down = cv2.resize(scannedImage, (320,320), interpolation= cv2.INTER_LINEAR)
+    cv2.imshow("op",resized_down)
+    cv2.waitKey(0) # waits until a key is pressed
+    cv2.destroyAllWindows()
