@@ -33,10 +33,10 @@ class ButtonHandler:
         if(len(string) > 3):
             print(f"string = {string}")
             tts(string)
-            self.create("mpg321 tts.mp3")
+            self.create("mpg321 ./audios/tts.mp3")
         else:
             print(f"No text detected")
-            self.create("mpg321 noText.mp3")
+            self.create("mpg321 ./audios/noText.mp3")
     
     def perform_scene_ocr(self):        
         cmd = "libcamera-jpeg -o " + INPUT_IMAGE_PATH + " -t 1000 --width 960 --height 960"
@@ -46,10 +46,10 @@ class ButtonHandler:
         if(len(string) > 3):
             print(f"string = {string}")
             tts(string)
-            self.create("mpg321 tts.mp3")
+            self.create("mpg321 ./audios/tts.mp3")
         else:
             print(f"No text detected")
-            self.create("mpg321 noText.mp3")
+            self.create("mpg321 ./audios/noText.mp3")
     
     def perform_scene_desc(self):        
         cmd = "libcamera-jpeg -o " + INPUT_IMAGE_PATH + "-t 1000 --width 960 --height 960"
@@ -59,10 +59,10 @@ class ButtonHandler:
         if(len(string) > 3):
             print(f"string = {string}")
             tts(string)
-            self.create("mpg321 tts.mp3")
+            self.create("mpg321 ./audios/tts.mp3")
         else:
             print(f"No text detected")
-            self.create("mpg321 noText.mp3")
+            self.create("mpg321 ./audios/noText.mp3")
 
     
     def kill(self):
