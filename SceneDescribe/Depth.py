@@ -17,7 +17,7 @@ class SceneDescribe:
 		self.labels = {}
 		#self.labels[0]='background'
 		key=0
-		with open("SeneDescribe/labelmap.txt") as f:
+		with open("SceneDescribe/labelmap.txt") as f:
 			for line in f:
 				val=line
 				self.labels[key] = val[:-1]
