@@ -1,6 +1,6 @@
 from time import sleep
 from multiprocessing import Process
-from subprocess import Popen, call
+from subprocess import Popen
 import pickle
 import os
 import signal
@@ -12,47 +12,32 @@ from OCR.DocScanner import DocScanner
 from OCR.DocOCR import DocOCR
 from SceneDescribe.Depth import SceneDescribe
 import os
-from audioplayer import AudioPlayer
-from playsound import playsound
 import time
 
+INPUT_IMAGE_PATH="InputImages/camera_image_2.jpeg"
+OUTPUT_IMAGE_PATH="OutputImages/output_camera_image_2.jpeg"
 
+### SCENE OCR ###
+TEXT_DETECTION_MODEL_PATH="Models/frozen_east_text_detection.pb";
+TEXT_RECOGNITION_MODEL_PATH="Models/crnn.onnx";
+detector_model = cv.dnn.readNet(TEXT_DETECTION_MODEL_PATH)
+recognizer_model = cv.dnn.readNet(TEXT_RECOGNITION_MODEL_PATH)
 
+scene_ocr=SceneOCR(detector_model,recognizer_model,INPUT_IMAGE_PATH)
 
-image_path="InputImages/camera_image_2.jpeg"
-output_image_path="OutputImages/output_camera_image_2.jpeg"
-
-#scene ocr object
-text_detection_model_path="Models/frozen_east_text_detection.pb";
-text_recognition_model_path="Models/crnn.onnx";
-detector_model = cv.dnn.readNet(text_detection_model_path)
-recognizer_model = cv.dnn.readNet(text_recognition_model_path)
-
-
-scene_ocr=SceneOCR(detector_model,recognizer_model,image_path)
-
-#Describe Scene object
+### SCENE DESCRIBE ###
 Depth_model_path="SceneDescribe/Models/lite-model_midas_v2_1_small_1_lite_1.tflite"
 Object_detection_model_path="SceneDescribe/Models/efficientdet_lite0.tflite"
 
 scene_desc=SceneDescribe(Depth_model_path , Object_detection_model_path)
 
-#doc_to_string_stuff
+### DOC OCR ###
 doc_scan=DocScanner()
 doc_ocr=DocOCR()
-
-
 
 cycle_pin=11
 select_pin=13
 cancel_pin=15
-
-#172 is a value with focus from 30 cm to infinity
-value = (195<<4) & 0x3ff0
-dat1 = (value>>8)&0x3f
-dat2 = value & 0xf0
-
-#os.system("i2cset -y 22 0x0c %d %d" % (dat1,dat2))
 
 GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
@@ -61,15 +46,12 @@ GPIO.setup(cycle_pin, GPIO.IN,GPIO.PUD_UP) # Set pin nth to be an input pin and 
 GPIO.setup(select_pin, GPIO.IN,GPIO.PUD_UP) # Set pin nth to be an input pin and set initial value to be pulled low (off)
 GPIO.setup(cancel_pin, GPIO.IN,GPIO.PUD_UP) # Set pin nth to be an input pin and set initial value to be pulled low (off)
 
-
 GPIO.add_event_detect(cycle_pin,GPIO.RISING,bouncetime=500) # Setup event on pin 10 rising edge
 GPIO.add_event_detect(select_pin,GPIO.RISING,bouncetime=500) # Setup event on pin 10 rising edge
 GPIO.add_event_detect(cancel_pin,GPIO.RISING,bouncetime=500) # Setup event on pin 10 rising edge
 
-
 print("models Loaded")
 Popen("mpg321 DocumentOCRMode.mp3", shell=True).wait()
-
 
 def tts(text):
     if len(text) < 3:
@@ -77,9 +59,6 @@ def tts(text):
     s = gTTS(text)
     s.save('tts.mp3')
     time.sleep(0.2)
-
-
-
 
 class SubprocessObserver:
     def __init__(self):
@@ -115,7 +94,6 @@ class SubprocessObserver:
         pickle.dump(self.processes,open('test.p','wb'))
         return len(self.processes) > 0
         
-
 class State:
     Count = 3
     DocOCR = 0
@@ -149,20 +127,20 @@ class ButtonHandler:
         return self.observer.create(command)
         
     def performDocOcr(self):
-        cmd = "libcamera-jpeg -o InputImages/camera_image_2.jpeg -t 1000 --width 2500 --height 2500"
+        cmd = "libcamera-jpeg -o " + INPUT_IMAGE_PATH + " -t 1000 --width 2500 --height 2500"
         p = self.create(cmd)
         p.wait()
         #creating a scan of the input image
-        crop_status,cropped_image = doc_scan.scan(path=image_path)
+        crop_status,cropped_image = doc_scan.scan(path=INPUT_IMAGE_PATH)
         
         #save the image
-        cv.imwrite(output_image_path,cropped_image)
+        cv.imwrite(OUTPUT_IMAGE_PATH,cropped_image)
         
         #sometimes exact corners cannot be found
         if(crop_status == 0):
             print("couldnt find exact page to crop")
 
-        string = doc_ocr.ocr(imagePath='OutputImages/output_camera_image_2.jpeg')
+        string = doc_ocr.ocr(imagePath=OUTPUT_IMAGE_PATH)
             
         if(len(string) > 3):
             print(f"string = {string}")
@@ -173,7 +151,7 @@ class ButtonHandler:
             self.create("mpg321 noText.mp3")
     
     def performSceneOcr(self):        
-        cmd = "libcamera-jpeg -o InputImages/camera_image_2.jpeg -t 1000 --width 960 --height 960"
+        cmd = "libcamera-jpeg -o " + INPUT_IMAGE_PATH + " -t 1000 --width 960 --height 960"
         p = self.create(cmd)
         p.wait()
         string = scene_ocr.ocr()
@@ -186,10 +164,10 @@ class ButtonHandler:
             self.create("mpg321 noText.mp3")
     
     def performSceneDesc(self):        
-        cmd = "libcamera-jpeg -o InputImages/camera_image_2.jpeg -t 1000 --width 960 --height 960"
+        cmd = "libcamera-jpeg -o " + INPUT_IMAGE_PATH + "-t 1000 --width 960 --height 960"
         p = self.create(cmd)
         p.wait()
-        string = scene_desc.describe(cv.imread("InputImages/camera_image_2.jpeg"))
+        string = scene_desc.describe(cv.imread(INPUT_IMAGE_PATH))
         if(len(string) > 3):
             print(f"string = {string}")
             tts(string)
@@ -244,8 +222,6 @@ class Test:
         handler.cancel()
         print("Cycle once")
         handler.cycle()
-
-
 
 if __name__ == "__main__":
     handler = ButtonHandler()
