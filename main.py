@@ -10,7 +10,7 @@ import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
 from OCR.SceneOCR import SceneOCR
 from OCR.DocScanner import DocScanner 
 from OCR.DocOCR import DocOCR
-from SeneDescribe.Depth import SceneDescribe
+from SceneDescribe.Depth import SceneDescribe
 import os
 from audioplayer import AudioPlayer
 from playsound import playsound
@@ -32,8 +32,8 @@ recognizer_model = cv.dnn.readNet(text_recognition_model_path)
 scene_ocr=SceneOCR(detector_model,recognizer_model,image_path)
 
 #Describe Scene object
-Depth_model_path="SeneDescribe/Models/lite-model_midas_v2_1_small_1_lite_1.tflite"
-Object_detection_model_path="SeneDescribe/Models/efficientdet_lite0.tflite"
+Depth_model_path="SceneDescribe/Models/lite-model_midas_v2_1_small_1_lite_1.tflite"
+Object_detection_model_path="SceneDescribe/Models/efficientdet_lite0.tflite"
 
 scene_desc=SceneDescribe(Depth_model_path , Object_detection_model_path)
 
