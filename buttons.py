@@ -3,7 +3,7 @@ from gtts import gTTS
 import os,sys,subprocess
 import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
 from OCR.SceneOCR import SceneOCR
-from SeneDescribe.Depth import SceneDescribe
+from SceneDescribe.Depth import SceneDescribe
 
 #scene ocr object
 text_detection_model_path="Models/frozen_east_text_detection.pb";
@@ -15,8 +15,8 @@ image_path="/home/pi/Desktop/GitHub/OurVision/TejasTextDetection/camera_image_2.
 obj=SceneOCR(detector_model,recognizer_model,image_path)
 
 #Describe Scene object
-Depth_model_path="SeneDescribe/Models/lite-model_midas_v2_1_small_1_lite_1.tflite"
-Object_detection_model_path="SeneDescribe/Models/efficientdet_lite0.tflite"
+Depth_model_path="SceneDescribe/Models/lite-model_midas_v2_1_small_1_lite_1.tflite"
+Object_detection_model_path="SceneDescribe/Models/efficientdet_lite0.tflite"
 
 obj2=SceneDescribe(Depth_model_path , Object_detection_model_path)
 
