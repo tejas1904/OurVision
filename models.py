@@ -19,3 +19,7 @@ scene_desc=SceneDescribe(Depth_model_path , Object_detection_model_path)
 ### DOC OCR ###
 doc_scan=DocScanner()
 doc_ocr=DocOCR()
+
+##CLOUD OCR##
+Cloud_api_key="/home/pi/Desktop/OurVision/Api_Keys/ourvision-key.json"
+cloud_ocr=CloudOCR("/home/pi/Desktop/OurVision/Api_Keys/ourvision-key.json")
