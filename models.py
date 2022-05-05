@@ -1,7 +1,11 @@
 import cv2 as cv
 
 from paths import INPUT_IMAGE_PATH, TEXT_DETECTION_MODEL_PATH, TEXT_RECOGNITION_MODEL_PATH
-from OCR import SceneOCR, DocScanner, DocOCR
+
+from OCR.SceneOCR import SceneOCR
+from OCR.DocOCR import DocOCR
+from OCR.DocScanner import DocScanner
+from OCR.CloudOCR import CloudOCR
 from SceneDescribe.Depth import SceneDescribe
 
 ### SCENE OCR ###

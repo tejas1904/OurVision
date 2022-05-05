@@ -6,6 +6,7 @@ import os
 class SubprocessObserver:
     def __init__(self):
         self.processes = []
+        pickle.dump(self.processes, open('test.p', 'wb'))
     
     # Create a subprocess
     def create(self, command):

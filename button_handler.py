@@ -52,7 +52,7 @@ class ButtonHandler:
             self.create("mpg321 ./audios/noText.mp3")
     
     def perform_scene_desc(self):        
-        cmd = "libcamera-jpeg -o " + INPUT_IMAGE_PATH + "-t 1000 --width 960 --height 960"
+        cmd = "libcamera-jpeg -o " + INPUT_IMAGE_PATH + " -t 1000 --width 960 --height 960"
         p = self.create(cmd)
         p.wait()
         string = scene_desc.describe(cv.imread(INPUT_IMAGE_PATH))
@@ -64,7 +64,19 @@ class ButtonHandler:
             print(f"No text detected")
             self.create("mpg321 ./audios/noText.mp3")
 
-    
+    def perform_cloud_ocr(self):
+        cmd = "libcamera-jpeg -o " + INPUT_IMAGE_PATH + " -t 1000 --width 960 --height 960"
+        p = self.create(cmd)
+        p.wait()
+        string = cloud_ocr.ocr(INPUT_IMAGE_PATH)
+        if(len(string) > 3):
+            print(f"string = {string}")
+            tts(string)
+            self.create("mpg321 ./audios/tts.mp3")
+        else:
+            print(f"No text detected")
+            self.create("mpg321 ./audios/noText.mp3")
+
     def kill(self):
         self.observer.kill()
         
@@ -84,7 +96,9 @@ class ButtonHandler:
             self.currProc = Process(target=self.perform_scene_ocr)
         elif self.state == State.SceneDesc:
             self.currProc = Process(target=self.perform_scene_desc)
-
+        elif self.state == State.CloudOCR:
+            self.currProc = Process(target=self.perform_cloud_ocr)
+            
         self.currProc.start()
     
     def cancel(self):

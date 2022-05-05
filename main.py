@@ -19,7 +19,7 @@ GPIO.add_event_detect(select_pin,GPIO.RISING,bouncetime=500) # Setup event on pi
 GPIO.add_event_detect(cancel_pin,GPIO.RISING,bouncetime=500) # Setup event on pin 10 rising edge
 
 print("models Loaded")
-play_audio.play("DocumentOCRMode.mp3")
+play_audio("DocumentOCRMode.mp3")
 
 if __name__ == "__main__":
     handler = ButtonHandler()
