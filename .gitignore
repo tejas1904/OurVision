@@ -1,8 +1,8 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
-OCR/__pycache__/
 *.py[cod]
 *$py.class
+
 # C extensions
 *.so
 
@@ -127,3 +127,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+SceneDescribe/__pycache__
+OCR/__pycache__
