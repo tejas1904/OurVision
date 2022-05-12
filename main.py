@@ -2,6 +2,13 @@ import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
 from state import State
 from button_handler import ButtonHandler
 from audio import play_audio
+import os
+
+focus=162
+value = (focus<<4) & 0x3ff0
+dat1 = (value>>8)&0x3f
+dat2 = value & 0xf0
+os.system("i2cset -y 22 0x0c %d %d" % (dat1,dat2))
 
 cycle_pin=11
 select_pin=13

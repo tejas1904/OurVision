@@ -1,6 +1,6 @@
 import cv2 as cv
 
-from paths import INPUT_IMAGE_PATH, TEXT_DETECTION_MODEL_PATH, TEXT_RECOGNITION_MODEL_PATH
+from paths import *
 
 from OCR.SceneOCR import SceneOCR
 from OCR.DocOCR import DocOCR
@@ -25,5 +25,4 @@ doc_scan=DocScanner()
 doc_ocr=DocOCR()
 
 ##CLOUD OCR##
-Cloud_api_key="/home/pi/Desktop/OurVision/Api_Keys/ourvision-key.json"
-cloud_ocr=CloudOCR("/home/pi/Desktop/OurVision/Api_Keys/ourvision-key.json")
+cloud_ocr=CloudOCR(CLOUD_API_KEY)
