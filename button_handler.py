@@ -19,14 +19,7 @@ class ButtonHandler:
         p = self.create(cmd)
         p.wait()
         # Creating a scan of the input image
-        crop_status,cropped_image = doc_scan.scan(path=INPUT_IMAGE_PATH)
-        
-        # Save the image
-        cv.imwrite(OUTPUT_IMAGE_PATH,cropped_image)
-        
-        # Sometimes exact corners cannot be found
-        if(crop_status == 0):
-            print("couldnt find exact page to crop")
+        doc_scan.scan(INPUT_IMAGE_PATH, OUTPUT_IMAGE_PATH)
 
         string = doc_ocr.ocr(imagePath=OUTPUT_IMAGE_PATH)
             

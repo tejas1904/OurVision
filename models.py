@@ -4,7 +4,7 @@ from paths import *
 
 from OCR.SceneOCR import SceneOCR
 from OCR.DocOCR import DocOCR
-from OCR.DocScanner import DocScanner
+from OCR.DocScanner.scan import DocScanner
 from OCR.CloudOCR import CloudOCR
 from SceneDescribe.Depth import SceneDescribe
 
