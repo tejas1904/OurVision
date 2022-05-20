@@ -1,0 +1,3 @@
+[submodule "OCR/DocScanner"]
+	path = OCR/DocScanner
+	url = https://github.com/tezz-io/DocScanner
