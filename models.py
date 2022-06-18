@@ -17,6 +17,7 @@ scene_ocr=SceneOCR(detector_model,recognizer_model,INPUT_IMAGE_PATH)
 ### SCENE DESCRIBE ###
 Depth_model_path="SceneDescribe/Models/lite-model_midas_v2_1_small_1_lite_1.tflite"
 Object_detection_model_path="SceneDescribe/Models/efficientdet_lite0.tflite"
+#Object_detection_model_path="/home/jayantsogikar/OurVision/SceneDescribe/Models/lite-model_imagenet_mobilenet_v3_small_100_224_classification_5_metadata_1.tflite"
 
 scene_desc=SceneDescribe(Depth_model_path , Object_detection_model_path)
 

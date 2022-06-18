@@ -3,6 +3,9 @@ from state import State
 from button_handler import ButtonHandler
 from audio import play_audio
 import os
+from tests import Test
+from time import sleep
+from tts import tts
 
 focus=162
 value = (focus<<4) & 0x3ff0
@@ -27,22 +30,24 @@ GPIO.add_event_detect(cancel_pin,GPIO.RISING,bouncetime=500) # Setup event on pi
 
 print("models Loaded")
 play_audio("DocumentOCRMode.mp3")
-
+debug = False
 if __name__ == "__main__":
     handler = ButtonHandler()
-
+    #handler.select()
+    #sleep(5)
     while True:
-        if GPIO.event_detected(cycle_pin):
+        if debug:inp = int(input("option 1,2 or 3:"))
+        if (debug and inp == 1) or GPIO.event_detected(cycle_pin):
             print('cycle_pin_pushed')
             handler.cycle()
             print(f"Currently in {State.name(handler.state)} mode")
 
-        if GPIO.event_detected(select_pin):
+        if (debug and inp == 2) or GPIO.event_detected(select_pin):
             print(f"Currently in {State.name(handler.state)} mode")
             print('select_pin_pushed')
             handler.select()
 
-        if GPIO.event_detected(cancel_pin):
+        if (debug and inp == 3) or GPIO.event_detected(cancel_pin):
             print('cancel_pin_pushed')
             handler.cancel()
 

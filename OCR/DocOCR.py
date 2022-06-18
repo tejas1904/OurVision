@@ -4,7 +4,7 @@ import pytesseract
 class DocOCR:
     def ocr(self, imagePath=None):
         image = cv2.imread(imagePath)
-        image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+        #image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
         return pytesseract.image_to_string(image)
  
 
