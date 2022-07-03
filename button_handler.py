@@ -133,7 +133,7 @@ class ButtonHandler:
             string = cloud_ocr.ocr(INPUT_IMAGE_PATH)
             if(len(string) > 3):
                 print(f"string = {string}")
-                tts(string)
+                tts(string,lang="kn")
                 if checkInternet():
                     self.create(self.start_sound() + ";sudo mpg321 ./audios/tts.mp3;" + self.end_sound())
                 else:

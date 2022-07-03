@@ -30,7 +30,7 @@ GPIO.add_event_detect(cancel_pin,GPIO.RISING,bouncetime=500) # Setup event on pi
 
 print("models Loaded")
 play_audio("DocumentOCRMode.mp3")
-debug = False
+debug = True
 if __name__ == "__main__":
     handler = ButtonHandler()
     #handler.select()

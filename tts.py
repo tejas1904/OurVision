@@ -3,6 +3,8 @@ import time
 import requests
 from subprocess import Popen
 import cv2
+from googletrans import Translator
+translator = Translator()
 
 
 def checkInternet():
@@ -18,13 +20,16 @@ def blurCheck(img):
     return val < 100
 
 
-def tts(text):
+def tts(text, lang = "en"):
     print("text is ", text)
     if not text : text = "No text Detected"
+    if lang != "en":
+        x = translator.translate(text,dest = lang)
+        text = x.text
     if checkInternet():
         if len(text) < 3:
             return
-        s = gTTS(text)
+        s = gTTS(text,lang = lang)
         s.save('./audios/tts.mp3')
         time.sleep(0.2)
     else:
