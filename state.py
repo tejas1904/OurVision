@@ -9,7 +9,7 @@ class State:
     RegionalCloudOCR = 4
 
      
-    mp3dict={0:"DocumentOCRMode.mp3",1:"SceneOCRMode.mp3",2:"DescribeSceneMode.mp3", 3:"CloudOCRMode.mp3",4:"RegionalCloudOCR"}
+    mp3dict={0:"DocumentOCRMode.mp3",1:"SceneOCRMode.mp3",2:"DescribeSceneMode.mp3", 3:"CloudOCRMode.mp3",4:"RegionalCloudOCRMode.mp3"}
     
     @classmethod
     def name(cls, state):
