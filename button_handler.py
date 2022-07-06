@@ -46,9 +46,11 @@ class ButtonHandler:
             print(f"string = {string}")
             tts(string)
             if checkInternet():
-                self.create(self.start_sound() + ";sudo mpg321 ./audios/tts.mp3;" + self.end_sound())
+                self.create(self.start_sound())
+                self.create("sudo mpg321 ./audios/tts.mp3;" + self.end_sound())
             else:
-                self.create(self.start_sound() + ";sudo aplay ./audios/pico.wav;" + self.end_sound())
+                self.create(self.start_sound())
+                self.create("sudo aplay ./audios/pico.wav;" + self.end_sound())
 
         else:
             print(f"No text detected")
@@ -155,7 +157,7 @@ class ButtonHandler:
             self.currProc = Process(target=self.perform_cloud_ocr)
         elif self.state == State.RegionalCloudOCR:
             self.currProc = Process(target=self.perform_cloud_ocr(regional=True))
-            
+
         self.currProc.start()
     
     def cancel(self):
