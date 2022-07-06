@@ -15,7 +15,7 @@ os.system("i2cset -y 22 0x0c %d %d" % (dat1,dat2))
 
 cycle_pin=11
 select_pin=13
-cancel_pin=15
+cancel_pin=16
 
 GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setmode(GPIO.BOARD) # Use physical pin numbering

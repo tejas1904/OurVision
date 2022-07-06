@@ -38,4 +38,4 @@ def tts(text, lang = "en"):
         #player = "sudo aplay ./audios/pico.wav"
         #Popen(player,shell = True).wait()
         
-    
+##tts("no text detected",lang="kn")

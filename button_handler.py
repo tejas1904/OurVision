@@ -46,11 +46,9 @@ class ButtonHandler:
             print(f"string = {string}")
             tts(string)
             if checkInternet():
-                self.create(self.start_sound())
-                self.create("sudo mpg321 ./audios/tts.mp3;" + self.end_sound())
+                self.create(self.start_sound() + ";sudo mpg321 ./audios/tts.mp3;" + self.end_sound())
             else:
-                self.create(self.start_sound())
-                self.create("sudo aplay ./audios/pico.wav;" + self.end_sound())
+                self.create(self.start_sound() + ";sudo aplay ./audios/pico.wav;" + self.end_sound())
 
         else:
             print(f"No text detected")
@@ -121,7 +119,7 @@ class ButtonHandler:
             #if blurCheck(img):
             #    self.create("sudo mpg321 ./audios/blurry.mp3")
             string = cloud_ocr.ocr(INPUT_IMAGE_PATH)
-            if(len(string) > 3):
+            if(string and len(string) > 3):
                 print(f"string = {string}")
                 tts(string,lang="kn" if regional else "en")
                 if checkInternet():
@@ -130,7 +128,7 @@ class ButtonHandler:
                     self.create(self.start_sound() + ";sudo aplay ./audios/pico.wav;" + self.end_sound())
             else:
                 print(f"No text detected")
-                self.create("sudo mpg321 ./audios/noText.mp3")
+                self.create("sudo mpg321 ./audios/noText.mp3" if not regional else "sudo mpg321 ./audios/noTextKannada.mp3")
         else:
             self.create("sudo mpg321 ./audios/no-internet.mp3")
 

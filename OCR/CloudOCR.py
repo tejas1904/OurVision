@@ -23,7 +23,7 @@ class CloudOCR:
 		# final=get_string(texts)
 		# print(final)
 		#print(texts[0].description)
-		return texts[0].description
+		return None if not texts else texts[0].description
 
 #redundant function as texts[0] already gives full text
 	def get_string(texts):
