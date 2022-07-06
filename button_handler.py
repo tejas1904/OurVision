@@ -100,9 +100,7 @@ class ButtonHandler:
             print(f"No text detected")
             self.create("mpg321 ./audios/noText.mp3")
 
-    def perform_cloud_ocr(self):
-        
-        
+    def perform_cloud_ocr(self,regional = False):
         if checkInternet():
             if usecam:
                 #cmd = "fswebcam -d /dev/video0 -r 2500x2500 -v -S 10 --set brightness=100% --no-banner " + INPUT_IMAGE_PATH
@@ -110,30 +108,20 @@ class ButtonHandler:
                 #p.wait()
                 capture(filename=INPUT_IMAGE_PATH,preprocess=False)
                 self.create("sudo mpg321 ./audios/camera_click.mp3")
-
-
             #cap = cv2.VideoCapture(0)
             #cap.set(cv2.CAP_PROP_FRAME_WIDTH,2592)
             #cap.set(cv2.CAP_PROP_FRAME_HEIGHT,1944)
-            
             #ret, frame = cap.read()
-            
             #img = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
-            
             #cv2.imwrite(INPUT_IMAGE_PATH,img)
-            
-            
             #img = cv2.imread(INPUT_IMAGE_PATH)
-            
             #check with pi4
             #if blurCheck(img):
             #    self.create("sudo mpg321 ./audios/blurry.mp3")
-                
-            
             string = cloud_ocr.ocr(INPUT_IMAGE_PATH)
             if(len(string) > 3):
                 print(f"string = {string}")
-                tts(string,lang="kn")
+                tts(string,lang="kn" if regional else "en")
                 if checkInternet():
                     self.create(self.start_sound() + ";sudo mpg321 ./audios/tts.mp3;" + self.end_sound())
                 else:
@@ -165,6 +153,8 @@ class ButtonHandler:
             self.currProc = Process(target=self.perform_scene_desc)
         elif self.state == State.CloudOCR:
             self.currProc = Process(target=self.perform_cloud_ocr)
+        elif self.state == State.RegionalCloudOCR:
+            self.currProc = Process(target=self.perform_cloud_ocr(regional=True))
             
         self.currProc.start()
     

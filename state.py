@@ -1,13 +1,15 @@
 from audio import play_audio
 
 class State:
-    Count = 4
+    Count = 5
     DocOCR = 0
     SceneOCR = 1
     SceneDesc = 2
     CloudOCR = 3
+    RegionalCloudOCR = 4
+
      
-    mp3dict={0:"DocumentOCRMode.mp3",1:"SceneOCRMode.mp3",2:"DescribeSceneMode.mp3", 3:"CloudOCRMode.mp3"}
+    mp3dict={0:"DocumentOCRMode.mp3",1:"SceneOCRMode.mp3",2:"DescribeSceneMode.mp3", 3:"CloudOCRMode.mp3",4:"RegionalCloudOCR"}
     
     @classmethod
     def name(cls, state):
@@ -19,6 +21,8 @@ class State:
             return "SceneDesc"
         if state == State.CloudOCR:
             return "CloudOCR"
+        if state == State.RegionalCloudOCR:
+            return "RegionalCloudOCR"
         return "Invalid"
         
     @classmethod
