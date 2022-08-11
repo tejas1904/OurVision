@@ -169,7 +169,7 @@ class ButtonHandler:
             ind = langs.index(self.language)
             ind = (ind + 1) % len(langs)
             self.language = langs[ind] 
-            self.create(self.start_sound() + ";sudo aplay ./audios/langPrompt_{};".format(self.language) + self.end_sound())
+            self.create(self.start_sound() + ";sudo aplay ./audios/langPrompt_{}.mp3;".format(self.language) + self.end_sound())
             print("language changed in regional mode")
         else:
             if checkInternet():
