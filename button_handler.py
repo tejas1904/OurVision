@@ -102,12 +102,12 @@ class ButtonHandler:
 
     def perform_cloud_ocr(self,regional = False):
         if checkInternet():
-            if usecam:
+            # if usecam:
                 #cmd = "fswebcam -d /dev/video0 -r 2500x2500 -v -S 10 --set brightness=100% --no-banner " + INPUT_IMAGE_PATH
                 #p = self.create(cmd)
                 #p.wait()
-                capture(filename=INPUT_IMAGE_PATH,preprocess=False)
-                self.create("sudo mpg321 ./audios/camera_click.mp3")
+            capture(filename=INPUT_IMAGE_PATH,preprocess=False)
+            self.create("sudo mpg321 ./audios/camera_click.mp3")
             #cap = cv2.VideoCapture(0)
             #cap.set(cv2.CAP_PROP_FRAME_WIDTH,2592)
             #cap.set(cv2.CAP_PROP_FRAME_HEIGHT,1944)
@@ -169,7 +169,7 @@ class ButtonHandler:
             ind = langs.index(self.language)
             ind = (ind + 1) % len(langs)
             self.language = langs[ind] 
-            self.create(self.start_sound() + ";sudo aplay ./audios/langPrompt_{}.mp3;".format(self.language) + self.end_sound())
+            self.create(self.start_sound() + ";sudo mpg321 ./audios/langPrompt_{}.mp3;".format(self.language) + self.end_sound())
             print("language changed in regional mode")
         else:
             if checkInternet():

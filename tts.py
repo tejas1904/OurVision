@@ -2,7 +2,7 @@ from gtts import gTTS
 import time
 import requests
 from subprocess import Popen
-# import cv2
+import cv2
 from googletrans import Translator
 translator = Translator()
 
