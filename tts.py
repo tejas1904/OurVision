@@ -2,7 +2,7 @@ from gtts import gTTS
 import time
 import requests
 from subprocess import Popen
-import cv2
+# import cv2
 from googletrans import Translator
 translator = Translator()
 
@@ -30,12 +30,17 @@ def tts(text, lang = "en"):
         if len(text) < 3:
             return
         s = gTTS(text,lang = lang)
-        s.save('./audios/tts.mp3')
+        s.save('./audios/tts1_{}.mp3'.format(lang))
         time.sleep(0.2)
     else:
         cmd = "pico2wave --wave=./audios/pico.wav " + "\"" + text + "\""
         Popen(cmd,shell = True).wait()
         #player = "sudo aplay ./audios/pico.wav"
         #Popen(player,shell = True).wait()
-        
-##tts("no text detected",lang="kn")
+
+# langs = ["kn","ta","te","ml"]
+tts("Language is now Kannada",lang='kn')
+tts("Language is now Tamil",lang='ta')
+tts("Language is now Telugu",lang='te')
+tts("Language is now Malyalam",lang='ml')
+
