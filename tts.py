@@ -30,7 +30,7 @@ def tts(text, lang = "en"):
         if len(text) < 3:
             return
         s = gTTS(text,lang = lang)
-        s.save('./audios/tts1_{}.mp3'.format(lang))
+        s.save('./audios/tts.mp3')
         time.sleep(0.2)
     else:
         cmd = "pico2wave --wave=./audios/pico.wav " + "\"" + text + "\""
@@ -38,9 +38,4 @@ def tts(text, lang = "en"):
         #player = "sudo aplay ./audios/pico.wav"
         #Popen(player,shell = True).wait()
 
-# langs = ["kn","ta","te","ml"]
-tts("Language is now Kannada",lang='kn')
-tts("Language is now Tamil",lang='ta')
-tts("Language is now Telugu",lang='te')
-tts("Language is now Malyalam",lang='ml')
 

@@ -14,7 +14,7 @@ class ButtonHandler:
         self.state = State.DocOCR
         self.currProc = Process(target=self.perform_doc_ocr)
         self.observer = SubprocessObserver()
-        
+        self.language = 'kn'
     def create(self, command):
         return self.observer.create(command)
     
@@ -121,14 +121,14 @@ class ButtonHandler:
             string = cloud_ocr.ocr(INPUT_IMAGE_PATH)
             if(string and len(string) > 3):
                 print(f"string = {string}")
-                tts(string,lang="kn" if regional else "en")
+                tts(string,lang=self.language if regional else "en")
                 if checkInternet():
                     self.create(self.start_sound() + ";sudo mpg321 ./audios/tts.mp3;" + self.end_sound())
                 else:
                     self.create(self.start_sound() + ";sudo aplay ./audios/pico.wav;" + self.end_sound())
             else:
                 print(f"No text detected")
-                self.create("sudo mpg321 ./audios/noText.mp3" if not regional else "sudo mpg321 ./audios/noTextKannada.mp3")
+                self.create("sudo mpg321 ./audios/noText.mp3" if not regional else "sudo mpg321 ./audios/noText_{}.mp3".format(self.language))
         else:
             self.create("sudo mpg321 ./audios/no-internet.mp3")
 
@@ -162,3 +162,17 @@ class ButtonHandler:
         self.kill()
         if self.currProc.is_alive():
             self.currProc.terminate()
+    
+    def multibutton(self):
+        if self.state == State.RegionalCloudOCR:
+            langs = ['kn','ta','te','ml']
+            ind = langs.index(self.language)
+            ind = (ind + 1) % len(langs)
+            self.language = langs[ind] 
+            self.create(self.start_sound() + ";sudo aplay ./audios/langPrompt_{};".format(self.language) + self.end_sound())
+            print("language changed in regional mode")
+        else:
+            if checkInternet():
+                self.create(self.start_sound() + ";sudo mpg321 ./audios/tts.mp3;" + self.end_sound())
+            else:
+                self.create(self.start_sound() + ";sudo aplay ./audios/pico.wav;" + self.end_sound())
