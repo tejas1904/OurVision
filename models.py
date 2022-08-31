@@ -15,11 +15,7 @@ recognizer_model = cv.dnn.readNet(TEXT_RECOGNITION_MODEL_PATH)
 scene_ocr=SceneOCR(detector_model,recognizer_model,INPUT_IMAGE_PATH)
 
 ### SCENE DESCRIBE ###
-Depth_model_path="SceneDescribe/Models/lite-model_midas_v2_1_small_1_lite_1.tflite"
-Object_detection_model_path="SceneDescribe/Models/efficientdet_lite0.tflite"
-#Object_detection_model_path="/home/jayantsogikar/OurVision/SceneDescribe/Models/lite-model_imagenet_mobilenet_v3_small_100_224_classification_5_metadata_1.tflite"
-
-scene_desc=SceneDescribe(Depth_model_path , Object_detection_model_path)
+scene_desc=SceneDescribe(depth_model_path=DEPTH_MODEL_PATH, object_detection_model_path=OBJECT_DETECTION_MODEL_PATH)
 
 ### DOC OCR ###
 doc_scan=DocScanner()

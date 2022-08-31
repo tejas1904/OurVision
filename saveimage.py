@@ -17,7 +17,7 @@ def capture_write(filename="image.jpeg", port=0, ramp_frames=30, x=1191, y=2000,
     for i in range(ramp_frames):
         temp = camera.read()
     retval, im = camera.read()
-    cv2.imwrite(filename if not preprocess else "InputImages/unprocessed_camera_image_2.jpeg",im)
+    cv2.imwrite(filename,im)
     del(camera)
     print("image Taken")
 

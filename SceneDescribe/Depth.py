@@ -2,17 +2,20 @@ import tflite_runtime.interpreter as tflite
 import numpy as np
 import cv2
 
+LABELMAP_PATH = "SceneDescribe/labelmap.txt"
+#LABELMAP_PATH = "labelmap.txt"
+
 class SceneDescribe:
 	def __init__(self,depth_model_path=None, object_detection_model_path=None):
-		self.depth_model = tflite.Interpreter(model_path=depth_model_path ,num_threads=4)
+		self.depth_model = tflite.Interpreter(model_path=depth_model_path ,num_threads=1)
 		self.depth_model.allocate_tensors()
 		
-		self.object_detection_model = tflite.Interpreter(model_path=object_detection_model_path ,num_threads=4)
+		self.object_detection_model = tflite.Interpreter(model_path=object_detection_model_path ,num_threads=1)
 		self.object_detection_model.allocate_tensors()
 		
 		self.labels = {}
 		key = 0
-		with open("SceneDescribe/labelmap.txt") as f:
+		with open(LABELMAP_PATH) as f:
 			for line in f:
 				val = line
 				self.labels[key] = val[:-1]
@@ -20,14 +23,19 @@ class SceneDescribe:
 
 	def get_depth_map(self,image_array=None):
 		# Loading the image
+		#print(11)
 		src = cv2.cvtColor(image_array, cv2.COLOR_BGR2RGB)
+		#print(12)
 
 		# Load the TFLite model and allocate tensors.
 		interpreter = self.depth_model
+		#print(13)
 
 		# Get input and output tensors.
 		input_details = interpreter.get_input_details()
+		#print(14)
 		output_details = interpreter.get_output_details()
+		#print(15)
 
 		input_data = cv2.resize(src,(256,256),interpolation=cv2.INTER_CUBIC)/255.0
 		mean = [0.485, 0.456, 0.406]
@@ -35,18 +43,22 @@ class SceneDescribe:
 		input_data = (input_data - mean) / std
 		input_data = input_data.reshape(1, 256, 256, 3).astype('float32')
 		interpreter.set_tensor(input_details[0]['index'], input_data)
-
+		
+		#print(16)
 		interpreter.invoke()
+		#print(17)
 
 		# The function `get_tensor()` returns a copy of the tensor data.
 		# Use `tensor()` in order to get a pointer to the tensor.
 		output_data = interpreter.get_tensor(output_details[0]['index'])
 		output_data = output_data.reshape(256,256)
+		#print(18)
 
 		prediction = cv2.resize(output_data, (np.shape(image_array)[1], np.shape(image_array)[0]), interpolation=cv2.INTER_CUBIC)
 		depth_min = prediction.min()
 		depth_max = prediction.max()
 		img_out = (255 * (prediction - depth_min) / (depth_max - depth_min)).astype("uint8")
+		#print(19)
 		
 		return(img_out)
 	
@@ -96,10 +108,14 @@ class SceneDescribe:
 		return final_data
 	
 	def describe(self,img):
+		#print("1")
 		depth_map = self.get_depth_map(img)
+		#print("2")
 		detected_stuff = self.get_object_bounding_boxes(img)
+		#print("3")
 		
 		sentence=""
+		#print("4")
 		for i in range(5):
 			label=detected_stuff[i][0]
 			# Convert to int
@@ -118,14 +134,17 @@ class SceneDescribe:
 				sentence+=f"a {label} is nearby,"
 			else:
 				sentence+=f"a {label} has been detected,"
-			
+		
+		#print("5")
 		sentence = sentence[:-1]+"."
 		return sentence
 
 if __name__ == "__main__":
+	DEPTH_MODULE_PATH="Models/lite-model_midas_v2_1_small_1_lite_1.tflite"
+	OBJECT_DETECTION_MODULE_PATH="Models/efficientdet_lite0.tflite"
 	from time import time
-	img = cv2.imread('table.jpg', cv2.IMREAD_UNCHANGED)
-	obj=SceneDescribe('lite-model_midas_v2_1_small_1_lite_1.tflite','efficientdet_lite0.tflite')
+	img = cv2.imread('sample.jpeg')
+	obj=SceneDescribe(DEPTH_MODULE_PATH,OBJECT_DETECTION_MODULE_PATH)
 	s=time()
-	obj.describe(img)
+	print(obj.describe(img))
 	print(time()-s)

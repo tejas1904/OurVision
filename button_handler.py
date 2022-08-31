@@ -61,7 +61,7 @@ class ButtonHandler:
   #          cmd = "fswebcam -d /dev/video0 -r 960x960 -v -S 10 --set brightness=100% --no-banner " + INPUT_IMAGE_PATH
  #           p = self.create(cmd)
 #            p.wait()
-            capture(filename=INPUT_IMAGE_PATH)
+            capture(filename=INPUT_IMAGE_PATH,preprocess=False)
             self.create("sudo mpg321 ./audios/camera_click.mp3")
 
 
@@ -78,16 +78,20 @@ class ButtonHandler:
             self.create("sudo mpg321 ./audios/noText.mp3")
     
     #describe a scene near you.
-    def perform_scene_desc(self):        
+    def perform_scene_desc(self):
+        print("started capturing image")
         if usecam:
   #          cmd = "fswebcam -d /dev/video0 -r 960x960 -v -S 10 --set brightness=100% --no-banner " + INPUT_IMAGE_PATH
  #           p = self.create(cmd)
             capture(filename=INPUT_IMAGE_PATH,preprocess=False)
-            self.create("sudo mpg321 ./audios/camera_click.mp3")
-
+            #self.create("sudo mpg321 ./audios/camera_click.mp3")
+        print("captured image")
 #            p.wait()
         print("going to describe scene now")
-        string = scene_desc.describe(cv.imread(INPUT_IMAGE_PATH))
+        captured_image = cv.imread(INPUT_IMAGE_PATH)
+        #cv.imshow("img", captured_image)
+        print("read image")
+        string = scene_desc.describe(captured_image)
         print("Scene described")
         if(len(string) > 3):
             print(f"string = {string}")
