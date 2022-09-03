@@ -29,15 +29,15 @@ class ButtonHandler:
             #cmd = "fswebcam -d /dev/video0  -v -S 60 --no-banner " + INPUT_IMAGE_PATH
             #p = self.create(cmd)
             #p.wait()
-            capture(filename=INPUT_IMAGE_PATH)
-            self.create("sudo mpg321 ./audios/camera_click.mp3")
+            capture(filename=INPUT_IMAGE_PATH,preprocess=False)
+            play_audio("camera_click.mp3")
 
         # Creating a scan of the input image
         img = cv2.imread(INPUT_IMAGE_PATH)
 
         if blurCheck(img):
             print("image is blurry")
-            self.create("sudo mpg321 ./audios/blurry.mp3")
+            play_audio("blurry.mp3")
         doc_scan.scan(INPUT_IMAGE_PATH, OUTPUT_IMAGE_PATH)
 
         string = doc_ocr.ocr(imagePath=OUTPUT_IMAGE_PATH)
@@ -46,13 +46,19 @@ class ButtonHandler:
             print(f"string = {string}")
             tts(string)
             if checkInternet():
-                self.create(self.start_sound() + ";sudo mpg321 ./audios/tts.mp3;" + self.end_sound())
+                play_audio("start_tts_sound.mp3")
+                play_audio("tts.mp3")
+                play_audio("end_tts_sound.mp3")
+                #self.create(self.start_sound() + ";sudo mpg321 ./audios/tts.mp3;" + self.end_sound())
             else:
-                self.create(self.start_sound() + ";sudo aplay ./audios/pico.wav;" + self.end_sound())
+                play_audio("start_tts_sound.mp3")
+                play_audio("pico.wav")
+                play_audio("end_tts_sound.mp3")
+                #self.create(self.start_sound() + ";sudo aplay ./audios/pico.wav;" + self.end_sound())
 
         else:
             print(f"No text detected")
-            self.create("sudo mpg321 ./audios/noText.mp3")
+            play_audio("noText.mp3")
         
     
     #for billboards and far away text
@@ -62,7 +68,7 @@ class ButtonHandler:
  #           p = self.create(cmd)
 #            p.wait()
             capture(filename=INPUT_IMAGE_PATH,preprocess=False)
-            self.create("sudo mpg321 ./audios/camera_click.mp3")
+            play_audio("camera_click.mp3")
 
 
         string = scene_ocr.ocr()
@@ -70,12 +76,18 @@ class ButtonHandler:
             print(f"string = {string}")
             tts(string)
             if checkInternet():
-                self.create(self.start_sound() + ";sudo mpg321 ./audios/tts.mp3;" + self.end_sound())
+                play_audio("start_tts_sound.mp3")
+                play_audio("tts.mp3")
+                play_audio("end_tts_sound.mp3")
+                #self.create(self.start_sound() + ";sudo mpg321 ./audios/tts.mp3;" + self.end_sound())
             else:
-                self.create(self.start_sound() + ";sudo aplay ./audios/pico.wav;" + self.end_sound())
+                play_audio("start_tts_sound.mp3")
+                play_audio("pico.wav")
+                play_audio("end_tts_sound.mp3")
+                #self.create(self.start_sound() + ";sudo aplay ./audios/pico.wav;" + self.end_sound())
         else:
             print(f"No text detected")
-            self.create("sudo mpg321 ./audios/noText.mp3")
+            play_audio("noText.mp3")
     
     #describe a scene near you.
     def perform_scene_desc(self):
@@ -84,7 +96,7 @@ class ButtonHandler:
   #          cmd = "fswebcam -d /dev/video0 -r 960x960 -v -S 10 --set brightness=100% --no-banner " + INPUT_IMAGE_PATH
  #           p = self.create(cmd)
             capture(filename=INPUT_IMAGE_PATH,preprocess=False)
-            #self.create("sudo mpg321 ./audios/camera_click.mp3")
+            play_audio("camera_click.mp3")
         print("captured image")
 #            p.wait()
         print("going to describe scene now")
@@ -97,12 +109,18 @@ class ButtonHandler:
             print(f"string = {string}")
             tts(string)
             if checkInternet():
-                self.create(self.start_sound() + ";sudo mpg321 ./audios/tts.mp3;" + self.end_sound())
+                play_audio("start_tts_sound.mp3")
+                play_audio("tts.mp3")
+                play_audio("end_tts_sound.mp3")
+                #self.create(self.start_sound() + ";sudo mpg321 ./audios/tts.mp3;" + self.end_sound())
             else:
-                self.create(self.start_sound() + ";sudo aplay ./audios/pico.wav;" + self.end_sound())
+                play_audio("start_tts_sound.mp3")
+                play_audio("pico.wav")
+                play_audio("end_tts_sound.mp3")
+                #self.create(self.start_sound() + ";sudo aplay ./audios/pico.wav;" + self.end_sound())
         else:
             print(f"No text detected")
-            self.create("mpg321 ./audios/noText.mp3")
+            play_audio("noText.mp3")
 
     def perform_cloud_ocr(self,regional = False):
         if checkInternet():
@@ -111,7 +129,7 @@ class ButtonHandler:
                 #p = self.create(cmd)
                 #p.wait()
             capture(filename=INPUT_IMAGE_PATH,preprocess=False)
-            self.create("sudo mpg321 ./audios/camera_click.mp3")
+            play_audio("camera_click.mp3")
             #cap = cv2.VideoCapture(0)
             #cap.set(cv2.CAP_PROP_FRAME_WIDTH,2592)
             #cap.set(cv2.CAP_PROP_FRAME_HEIGHT,1944)
@@ -127,14 +145,20 @@ class ButtonHandler:
                 print(f"string = {string}")
                 tts(string,lang=self.language if regional else "en")
                 if checkInternet():
-                    self.create(self.start_sound() + ";sudo mpg321 ./audios/tts.mp3;" + self.end_sound())
+                    play_audio("start_tts_sound.mp3")
+                    play_audio("tts.mp3")
+                    play_audio("end_tts_sound.mp3")
+                    #self.create(self.start_sound() + ";sudo mpg321 ./audios/tts.mp3;" + self.end_sound())
                 else:
-                    self.create(self.start_sound() + ";sudo aplay ./audios/pico.wav;" + self.end_sound())
+                    play_audio("start_tts_sound.mp3")
+                    play_audio("pico.wav")
+                    play_audio("end_tts_sound.mp3")
+                    #self.create(self.start_sound() + ";sudo aplay ./audios/pico.wav;" + self.end_sound())
             else:
                 print(f"No text detected")
-                self.create("sudo mpg321 ./audios/noText.mp3" if not regional else "sudo mpg321 ./audios/noText_{}.mp3".format(self.language))
+                play_audio("noText.mp3" if not regional else "noText_{}.mp3".format(self.language))
         else:
-            self.create("sudo mpg321 ./audios/no-internet.mp3")
+            play_audio("no-internet.mp3")
 
     def kill(self):
         self.observer.kill()
@@ -173,10 +197,19 @@ class ButtonHandler:
             ind = langs.index(self.language)
             ind = (ind + 1) % len(langs)
             self.language = langs[ind] 
-            self.create(self.start_sound() + ";sudo mpg321 ./audios/langPrompt_{}.mp3;".format(self.language) + self.end_sound())
+            play_audio("start_tts_sound.mp3")
+            play_audio("langPrompt_{}.mp3".format(self.language))
+            play_audio("end_tts_sound.mp3")
+            #self.create(self.start_sound() + ";sudo mpg321 ./audios/langPrompt_{}.mp3;".format(self.language) + self.end_sound())
             print("language changed in regional mode")
         else:
             if checkInternet():
-                self.create(self.start_sound() + ";sudo mpg321 ./audios/tts.mp3;" + self.end_sound())
+                play_audio("start_tts_sound.mp3")
+                play_audio("tts.mp3")
+                play_audio("end_tts_sound.mp3")
+                #self.create(self.start_sound() + ";sudo mpg321 ./audios/tts.mp3;" + self.end_sound())
             else:
-                self.create(self.start_sound() + ";sudo aplay ./audios/pico.wav;" + self.end_sound())
+                play_audio("start_tts_sound.mp3")
+                play_audio("pico.wav")
+                play_audio("end_tts_sound.mp3")
+                #self.create(self.start_sound() + ";sudo aplay ./audios/pico.wav;" + self.end_sound())
