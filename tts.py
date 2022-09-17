@@ -24,8 +24,12 @@ def tts(text, lang = "en"):
     print("text is ", text)
     if not text : text = "No text Detected"
     if lang != "en":
-        x = translator.translate(text,dest = lang)
-        text = x.text
+        try:
+            x = translator.translate(text,dest = lang)
+            text = x.text
+        except:
+            text = "An Error Occured. Please try again or contact the developers."
+            lang = "en"
     if checkInternet():
         if len(text) < 3:
             return
